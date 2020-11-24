@@ -7,6 +7,7 @@ export function dijkstra(grid, startNode, finishNode) {
   startNode.distance = 0;
   const unvisitedNodes = getAllNodes(grid);
   while (!!unvisitedNodes.length) {
+    //console.log(unvisitedNodes);
     sortNodesByDistance(unvisitedNodes);
     const closestNode = unvisitedNodes.shift();
     // If we encounter a wall, we skip it.
@@ -20,94 +21,6 @@ export function dijkstra(grid, startNode, finishNode) {
     updateUnvisitedNeighbors(closestNode, grid);
   }
 }
-// class PriorityQueue {
-//   constructor(maxSize) {
-//      // Set default max size if not provided
-//      if (isNaN(maxSize)) {
-//         maxSize = 10;
-//       }
-//      this.maxSize = maxSize;
-//      // Init an array that'll contain the queue values.
-//      this.container = [];
-//   }
-//   // Helper function to display all values while developing
-//   display() {
-//      console.log(this.container);
-//   }
-//   // Checks if queue is empty
-//   isEmpty() {
-//      return this.container.length === 0;
-//   }
-//   // checks if queue is full
-//   isFull() {
-//      return this.container.length >= this.maxSize;
-//   }
-//   enqueue(data, priority) {
-//      // Check if Queue is full
-//      if (this.isFull()) {
-//         console.log("Queue Overflow!");
-//         return;
-//      }
-//      let currElem = new this.Element(data, priority);
-//      let addedFlag = false;
-//      // Since we want to add elements to end, we'll just push them.
-//      for (let i = 0; i < this.container.length; i++) {
-//         if (currElem.priority < this.container[i].priority) {
-//            this.container.splice(i, 0, currElem);
-//            addedFlag = true; break;
-//         }
-//      }
-//      if (!addedFlag) {
-//         this.container.push(currElem);
-//      }
-//   }
-//   dequeue() {
-//   // Check if empty
-//   if (this.isEmpty()) {
-//      console.log("Queue Underflow!");
-//      return;
-//   }
-//   return this.container.pop();
-// }
-// peek() {
-//   if (this.isEmpty()) {
-//     console.log("Queue Underflow!");
-//     return;
-//   }
-//   return this.container[this.container.length - 1];
-// }
-// clear() {
-//   this.container = [];
-// }
-
-// // Create an inner class that we'll use to create new nodes in the queue
-// // Each element has some data and a priority
-// PriorityQueue.prototype.Element = class {
-//   constructor(data, priority) {
-//     this.data = data;
-//     this.priority = priority;
-//   }
-// };
-// export function dijkstra(grid, startNode, finishNode) {
-//   const visitedNodesInOrder = [];
-//   startNode.distance = 0;
-//   const unvisitedNodes = getAllNodes(grid);
-//   let pq = new PriorityQueue();
-//   pq.enqueue(startNode, 0);
-//   while (!pq.isEmpty()) {
-//     const closestNode = pq.dequeue();
-//     // If we encounter a wall, we skip it.
-//     if (closestNode.isWall || closestNode.isVisited) continue;
-//     // If the closest node is at a distance of infinity,
-//     // we must be trapped and should therefore stop.
-
-//     if (closestNode.distance === Infinity) return visitedNodesInOrder;
-//     closestNode.isVisited = true;
-//     visitedNodesInOrder.push(closestNode);
-//     if (closestNode === finishNode) return visitedNodesInOrder;
-//     updateUnvisitedNeighbors(closestNode, grid);
-//   }
-// }
 
 function sortNodesByDistance(unvisitedNodes) {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
@@ -135,9 +48,12 @@ function getAllNodes(grid) {
   const nodes = [];
   for (const row of grid) {
     for (const node of row) {
+      if(node.isWall) continue;
       nodes.push(node);
+      
     }
   }
+  console.log(nodes.length)
   return nodes;
 }
 

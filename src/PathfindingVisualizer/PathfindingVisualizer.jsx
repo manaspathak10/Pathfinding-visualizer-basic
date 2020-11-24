@@ -1,16 +1,27 @@
 import React, { Component } from 'react';
 import Node from './Node/Node';
 import { dijkstra, getNodesInShortestPathOrder } from '../algorithms/dijkstra';
+import {dfs,getNodesInShortestPathOrderz} from '../algorithms/dfs';
 
 import './PathfindingVisualizer.css';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+alert("You will be asked to enter the coordinates of source and destination. The entire map is of size 20*50 where 50 is in x-direction and 20 is in y-direction");
 
-export default class PathfindingVisualizer extends Component {
-  constructor() {
+while(!x)var x= window.prompt("Enter x-coordinate of source");
+const START_NODE_COL=parseInt(x);
+
+while(!x1)var x1= window.prompt("Enter y-coordinate of source");
+const START_NODE_ROW = parseInt(x1);
+
+while(!x2)var x2= window.prompt("Enter x-coordinate of destination");
+const FINISH_NODE_COL = parseInt(x2);
+while(!x3)var x3= window.prompt("Enter y-coordinate of destination");
+const FINISH_NODE_ROW = parseInt(x3);
+
+export default class PathfindingVisualizer extends Component 
+{
+  constructor() 
+  {
     super();
     this.state = {
       grid: [],
@@ -18,17 +29,20 @@ export default class PathfindingVisualizer extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount() 
+  {
     const grid = getInitialGrid();
     this.setState({ grid });
   }
 
-  handleMouseDown(row, col) {
+  handleMouseDown(row, col) 
+  {
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid, mouseIsPressed: true });
   }
 
-  handleMouseEnter(row, col) {
+  handleMouseEnter(row, col) 
+  {
     if (!this.state.mouseIsPressed) return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid });
@@ -38,19 +52,22 @@ export default class PathfindingVisualizer extends Component {
     this.setState({ mouseIsPressed: false });
   }
 
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
-    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) 
+  {
+    //console.log(nodesInShortestPathOrder);
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) 
+    {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           this.animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
+        }, 50 * i);
         return;
       }
-      setTimeout(() => {
+      setTimeout(() => 
+      {
         const node = visitedNodesInOrder[i];
-        document.getElementById(`node-${node.row}-${node.col}`).className =
-          'node node-visited';
-      }, 10 * i);
+        document.getElementById(`node-${node.row}-${node.col}`).className ='node node-visited';
+      }, 50 * i);
     }
   }
 
@@ -64,11 +81,21 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  visualizeDijkstra() {
+  visualizeDijkstra() 
+  {
     const { grid } = this.state;
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+   visualizeDFS() 
+  {
+    const { grid } = this.state;
+    const startNode = grid[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = dfs(grid, startNode, finishNode);
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
   }
@@ -81,8 +108,8 @@ export default class PathfindingVisualizer extends Component {
         <button class="btn" onClick={() => this.visualizeDijkstra()}>
             Dijkstra
         </button>
-        <button class="btn" onClick={() => this.visualizeDijkstra()}>
-            0-1 BFS
+        <button class="btn" onClick={() => this.visualizeDFS()}>
+            DFS
         </button>
         <div className="grid">
           {grid.map((row, rowIdx) => {
